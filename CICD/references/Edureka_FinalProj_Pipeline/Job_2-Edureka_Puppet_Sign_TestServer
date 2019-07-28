@@ -1,0 +1,24 @@
+
+Build Triggers
+
+Build after other projects are built
+Projects to Watch : Edureka_Puppet_Installation_TestServer
+Trigger only if build is stable
+
+Build
+Step 1. login to puppet server and sign certificate request
+Method: Execute Shell Script on Remote Host Using SSH
+SSH Site: ansadm@localhost:22
+Command: 
+sudo /opt/puppetlabs/bin/puppet cert list --all
+sudo /opt/puppetlabs/bin/puppet cert sign test
+sudo /opt/puppetlabs/bin/puppet cert list --all
+sudo cp /home/ansadm/puppet/it_works.pp /etc/puppetlabs/code/environments/production/manifests/site.pp
+
+Step 2. login to puppet client and pull configration from puppet server
+Method: Execute Shell Script on Remote Host Using SSH
+Command:
+sudo rm /tmp/it_works.txt
+sudo /opt/puppetlabs/bin/puppet agent -t
+sudo sleep 5
+sudo cat /tmp/it_works.txt

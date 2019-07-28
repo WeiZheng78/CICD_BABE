@@ -1,0 +1,25 @@
+
+Build Triggers
+Build after other projects are built
+Projects to watch : Edureka_Puppet_Cleanup_TestServer
+Trigger only if build is stable
+
+Build Environment
+Using secret tests or files
+Secret Text
+Variable: JENKINS_HOSTNAME
+Credentials : Sepecific Credential - JENKINS_HOSTNAME
+
+Build
+Step 1. Try to install puppet agent from scratch and configure puppet agent in the remote test server
+Method: Execute Shell script on Remote host using SSH
+SSH site: ansadm@test:22
+Command: 
+sudo apt-get -y install puppet-agent
+sudo /opt/puppetlabs/puppet/bin/puppet config set certname test --section agent
+sudo /opt/puppetlabs/puppet/bin/puppet config set server $JENKINS_HOSTNAME --section agent
+sudo /opt/puppetlabs/puppet/bin/puppet config set ca_server $JENKINS_HOSTNAME --section agent
+sudo /opt/puppetlabs/puppet/bin/puppet config set logdest /var/log/puppetlabs/puppet/puppet-agent.log --section agent
+sudo /opt/puppetlabs/bin/puppet agent -t &
+
+

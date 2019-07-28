@@ -1,0 +1,20 @@
+Build Triggers
+Build after other projects are built
+Projects to watch: Edureka_Puppet_Sign_TestServer
+Trigger only if build is stable
+
+Build 
+Step 1: define Docker configuration as below
+Method: Execute Shell Script on Remote Host Using SSH
+SSH Site: ansadm@localhost:22
+Command: 
+sudo cp /home/ansadm/puppet/install.pp /etc/puppetlabs/code/environments/production/manifests/site.pp
+
+Step 2: run pull in Test Server
+Method: Execute Shell Script on Remote Host Using SSH
+Command:
+sudo /opt/puppetlabs/bin/puppet agent -t &
+sleep 20
+sudo docker pull maven:3-apline
+sudo docker pull devopsedu/webapp
+sudo docker images

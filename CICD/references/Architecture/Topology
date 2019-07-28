@@ -1,0 +1,20 @@
+
+
+##########        ####################
+## Test ##        # Admin Server     #
+##      ##        # ---------------- #
+##      ## ------ # |Jenkins_Master| #
+##      ## Port   # |Container     | #
+##      ##        # ---------------- #
+##      ##        #         |        #
+##      ##        # ---------------- #
+##########        # |Jenkins_Slave | #
+                  # |Container     | #
+                  # ---------------- #
+                  ####################
+
+Define a Docker image for Jenkins master and slave
+
+the container based on the image can run systemd, and puppet server, jenkins server, openjdk
+
+

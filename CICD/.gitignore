@@ -1,0 +1,9 @@
+centos7
+db_data
+tomcat
+web
+jenkins-master/jenkins_home
+jenkins-master/ansible_home
+jenkins-slave/jenkins_home
+jenkins-slave/ansible_home
+docker-compose.yml.tutorial
