@@ -1,0 +1,86 @@
+version: '3'
+services:
+  jenkins-master:
+    container_name: jenkins-master
+    image: jenkins-master
+    build:
+      context: jenkins-master
+    # --security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro
+    security_opt:
+      - seccomp:unconfined
+    tmpfs:
+      - /run
+      - /run/lock
+    ports:
+      - "8000:8080"
+      - "8140:8140"
+    volumes:
+      - $PWD/jenkins-master/jenkins_home:/var/lib/jenkins
+      - $PWD/jenkins-master/ansible_home:/home/ansadm
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/jenkins-master/rc.local:/etc/rc.local
+    deploy:
+      resources:
+        limits: 
+          memory: 3072M
+        reservations:
+          memory: 512M
+    networks:
+      - net
+  jenkins-slave:
+    container_name: jenkins-slave
+    image: jenkins-master
+    security_opt:
+      - seccomp:unconfined
+    tmpfs:
+      - /run
+      - /run/lock
+    ports:
+      - "8001:8080"
+    volumes:
+      - $PWD/jenkins-slave/jenkins_home:/var/lib/jenkins
+      - $PWD/jenkins-slave/ansible_home:/home/ansadm
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/jenkins-slave/rc.local:/etc/rc.local
+    networks:
+      - net
+  remote_host:
+    container_name: remote-host
+    image: remote-host
+    build:
+      context: centos7
+    volumes:
+      - $PWD/aws-s3.sh:/tmp/script.sh
+    networks:
+      - net
+  db_host:
+    container_name: db
+    image: mysql:5.7
+    environment:
+      - "MYSQL_ROOT_PASSWORD=1234"
+    volumes:
+      - $PWD/db_data:/var/lib/mysql
+    networks:
+      - net
+  web:
+    container_name: web
+    image: ansible-web
+    build:
+      context: web
+    ports:
+      - "80:80"
+    networks:
+      - net
+  tomcat:
+    container_name: tomcat
+    image: tomcat
+    build:
+      context: tomcat
+    ports:
+      - "8002:8080"
+    networks:
+      - net
+networks:
+  net:

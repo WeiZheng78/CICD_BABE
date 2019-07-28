@@ -1,0 +1,32 @@
+
+Step 1. define Puppet Site definition in Jenkins-Master Container as below.
+the redefined node default is as below
+root@2eb8e69c9e05:/# cat /home/ansadm/puppet/uninstall.pp 
+node default {
+  # Docker CE:
+  class { 'docker': 
+    ensure => absent 
+  }
+}
+Method: Execute Shell script on Remote Host Using SSH
+SSH site: ansadm@localhost:22
+Command: sudo cp /home/ansadm/puppet/uninstall.pp /etc/puppetlabs/code/environments/production/manifests/site.pp
+
+Step 2. execute cleanup operation as per definination in puppet in the remote test server.
+Method: Execute Shell Script on Remote Host Using SSH
+SSH site: ansadm@test:22
+Command: 
+sudo /opt/puppetlabs/bin/puppet agent -t
+sudo /opt/puppetlabs/bin/puppet config print | grep certdir
+sudo rm /etc/puppetlabs/puppet/ssl -rf
+sudo apt-get -y remove puppet-agent
+sudo apt-get -y purge puppet-agent
+sudo apt -y autoremove
+
+Step 3. make puppet related info cleanup in the puppet server
+Method: Execute Shell Script on Remote Host Using SSH
+Command:
+sudo /opt/puppetlabs/bin/puppet cert list --all
+sudo /opt/puppetlabs/bin/puppet node clean test
+sudo /opt/puppetlabs/bin/puppet node clean test
+
